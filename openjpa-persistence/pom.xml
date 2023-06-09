@@ -62,5 +62,63 @@
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Mutation-Testing</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <withHistory>true</withHistory>
+                <pitest.version>1.11.5</pitest.version>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>1.10.3</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>1.1.1</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <targetClasses>
+                                <param>org.apache.openjpa.persistence.EntityManagerFactoryImpl</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>org.apache.openjpa.persistence.EntityManagerFactoryImplTest</param>
+                            </targetTests>
+                            <avoidCallsTo>
+                                <avoidCallsTo>org.slf4j</avoidCallsTo>
+                            </avoidCallsTo>
+                            <timeoutConstant>8000</timeoutConstant>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>Generate PIT report</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>mutationCoverage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
