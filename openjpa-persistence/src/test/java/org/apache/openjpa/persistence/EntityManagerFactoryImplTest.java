@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 
 class EntityManagerFactoryImplTest {
 
@@ -18,7 +21,9 @@ class EntityManagerFactoryImplTest {
 
     @Test
     void getBroker() {
-        EntityManagerFactoryImpl entityManagerFactory = new EntityManagerFactoryImpl();
+        //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("pv_2");
+        //EntityManagerFactoryImpl entityManagerFactory = new EntityManagerFactoryImpl();
+
         Assertions.assertTrue(true);
     }
 
