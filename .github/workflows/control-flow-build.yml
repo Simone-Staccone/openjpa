@@ -32,5 +32,5 @@ jobs:
         with:
           java-version: '1.8'
       - name: 'Build with Maven'
-        run: mvn -B verify --file pom.xml -pl :openjpa-kernel -P Data-Flow-Coverage
+        run: mvn -B verify --file pom.xml -pl :openjpa-kernel -P Control-Flow-Coverage
 

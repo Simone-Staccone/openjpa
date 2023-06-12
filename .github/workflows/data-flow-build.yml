@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ windows-latest ,ubuntu-latest]
+        os: [ windows-latest ,ubuntu-latest ]
 
     steps:
       - uses: actions/checkout@v2
@@ -31,5 +31,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '1.8'
+      - name: Clone and build ba-dua repository
+        run: |
+            git clone https://github.com/saeg/ba-dua
+            cd ba-dua
+            git checkout tags/ba-dua-0.6.0 -b ba-dua-0.6.0
+            mvn clean install
+            cd ..
       - name: 'Build with Maven'
         run: mvn -B verify --file pom.xml -pl :openjpa-kernel -P Data-Flow-Coverage
