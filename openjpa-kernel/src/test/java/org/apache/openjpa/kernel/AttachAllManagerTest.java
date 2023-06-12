@@ -15,23 +15,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Null;
-
 
 import java.util.*;
-
 
 import static org.mockito.Mockito.when;
 
 @RunWith(value = Parameterized.class)
-public class AttachManagerTest {
+public class AttachAllManagerTest {
     private AttachManager attachManager;
     private Object objCollection;
     private boolean expectedException;
 
     @Before
     public void setUp() throws Exception {
-        //Mock plausible configuration for AttachManager
         BrokerImpl broker = Mockito.mock(BrokerImpl.class);
         OpenJPAConfiguration openJPAConfiguration = Mockito.mock(OpenJPAConfiguration.class);
         MetaDataRepository metaDataRepository = Mockito.mock(MetaDataRepository.class);
@@ -39,6 +35,8 @@ public class AttachManagerTest {
         MetaDataDefaults metaDataDefaults = Mockito.mock(MetaDataDefaults.class);
 
         ProxyManagerImpl proxyManager = new ProxyManagerImpl();
+//        MetaDataRepository metaDataRepository = new MetaDataRepository();
+
 
         when(metaDataRepository.getMetaDataFactory()).thenReturn(metaDataFactory);
 
@@ -69,17 +67,17 @@ public class AttachManagerTest {
     }
 
 
-    public AttachManagerTest(AttachManagerPartition calendarProxyPartition){
+    public AttachAllManagerTest(AttachAllManagerPartition calendarProxyPartition){
         this.objCollection = calendarProxyPartition.collection;
         this.expectedException = calendarProxyPartition.expectedException;
     }
 
 
-    private static final class AttachManagerPartition {
+    private static final class AttachAllManagerPartition {
         private final Object collection;
         private final boolean expectedException;
 
-        private AttachManagerPartition(Object collection, boolean expectedException){
+        private AttachAllManagerPartition(Object collection, boolean expectedException){
             this.collection = collection;
             this.expectedException = expectedException;
         }
@@ -87,36 +85,37 @@ public class AttachManagerTest {
 
 
     @Parameterized.Parameters
-    public static List<AttachManagerPartition> getObjectType(){
-        List<AttachManagerPartition> attachManagerPartitions = new ArrayList<>();
+    public static List<AttachAllManagerPartition> getObjectType(){
+        List<AttachAllManagerPartition> attachManagerPartitions = new ArrayList<>();
         Collection collection = new ArrayList();
         collection.add("2");
         collection.add("3");
 
-        attachManagerPartitions.add(new AttachManagerPartition(collection,false));
-        attachManagerPartitions.add(new AttachManagerPartition("2",false));
-        attachManagerPartitions.add(new AttachManagerPartition("",false));
-        attachManagerPartitions.add(new AttachManagerPartition(Collections.emptySet(),false));
-        attachManagerPartitions.add(new AttachManagerPartition(null,true));
+        attachManagerPartitions.add(new AttachAllManagerPartition(collection,false));
+        attachManagerPartitions.add(new AttachAllManagerPartition(Collections.emptySet(),false));
+        attachManagerPartitions.add(new AttachAllManagerPartition("2",true));
+        attachManagerPartitions.add(new AttachAllManagerPartition("",true));
+        attachManagerPartitions.add(new AttachAllManagerPartition(null,true));
 
         return attachManagerPartitions;
     }
 
 
     @Test
-    public void attachTest() {
+    public void attachAllTest() {
         try {
             Assert.assertTrue(attachManager.getCopyNew());
 
             attachManager.fireBeforeAttach(this.objCollection, Mockito.mock(ClassMetaData.class));
 
-            attachManager.attach(this.objCollection);
+            attachManager.attachAll((Collection) this.objCollection);
 
             if(this.objCollection != null){
                 Assert.assertThrows(NullPointerException.class,() -> attachManager.getDetachedObjectId(this.objCollection));
             }else{
                 throw new NullPointerException();
             }
+
 
             attachManager.setAttachedCopy(this.objCollection, Mockito.mock(PersistenceCapable.class));
 
@@ -126,10 +125,9 @@ public class AttachManagerTest {
             //No one should have managed object that has just been attached
             Assert.assertThrows(UserException.class, () -> attachManager.assertManaged(this.objCollection));
 
-
-
             Assert.assertFalse(expectedException);
-        } catch (NullPointerException | NoSuchElementException e) {
+        } catch (NullPointerException | NoSuchElementException | ClassCastException e) {
+
             Assert.assertTrue(expectedException);
         }
     }

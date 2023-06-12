@@ -128,12 +128,14 @@ public class ProxyManagerImplTest {
         //Now check if copy works
         if(this.excpectedProxyClass != null && this.obj != null){
             Object copyProxy = proxyManager.copyCustom(customProxy);
+            Object newCopyProxy = proxyManager.copyCustom(copyProxy);
             if(this.obj.getClass().getSimpleName().compareTo("java$util$Date$proxy") == 0){
                 Assert.assertEquals("java$util$Date$proxy",customProxy.getClass().getSimpleName());
             }else{
                 Assert.assertEquals(0,
                         this.obj.getClass().getSimpleName().compareTo(copyProxy.getClass().getSimpleName()));
             }
+            Assert.assertEquals(this.obj,newCopyProxy);
         }
 
 

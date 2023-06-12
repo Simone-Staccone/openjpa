@@ -273,8 +273,8 @@ public class CollectionManagerTest {
                 //Added after Jacoco report
                 try {
                     proxyCollection1 = (Collection) proxyManager.newCollectionProxy(ModifierSample.class, null, null, true);
-                }catch (Exception ex){
-                    ex.printStackTrace();
+                }catch (Exception ignored){
+
                 }
 
             }
