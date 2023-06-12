@@ -105,7 +105,6 @@ public class CalendarManagerTest {
 
             Assert.assertFalse(expectedException);
         }catch (Exception e){
-            e.printStackTrace();
             Assert.assertTrue(expectedException);
         }
 

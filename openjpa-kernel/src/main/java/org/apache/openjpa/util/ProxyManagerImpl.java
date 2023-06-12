@@ -393,8 +393,7 @@ public class ProxyManagerImpl
                 ProxyCollection.class);
             Class pcls = loadBuildTimeProxy(type, l);
             if (pcls == null)
-                pcls = GeneratedClasses.loadBCClass(
-                    generateProxyCollectionBytecode(type, true), l);
+                pcls = GeneratedClasses.loadBCClass(generateProxyCollectionBytecode(type, true), l);
             proxy = (ProxyCollection) instantiateProxy(pcls, null, null);
             _proxies.put(type, proxy);
         }

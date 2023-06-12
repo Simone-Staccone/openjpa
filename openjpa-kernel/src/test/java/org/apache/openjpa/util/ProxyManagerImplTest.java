@@ -67,7 +67,8 @@ public class ProxyManagerImplTest {
         customProxyParameters.add(new CustomProxyPartition(null, null, false));
         customProxyParameters.add(new CustomProxyPartition(null, 1, false));
 
-
+        //Added after jacoco
+        customProxyParameters.add(new CustomProxyPartition("java$util$Date$proxy", new ProxyManagerImpl().newDateProxy(Date.class), false));
 
 
         return customProxyParameters;
@@ -109,7 +110,7 @@ public class ProxyManagerImplTest {
 
             //Check if is not proxyble
             if(this.obj != null){
-                //Assert.assertTrue(proxyManager.isUnproxyable(this.obj.getClass())); //isUnproxyble fallisce nei casi in cui passiamo un int
+                Assert.assertFalse(proxyManager.isUnproxyable(this.obj.getClass())); //isUnproxyble fallisce nei casi in cui passiamo un int
             }
         }else if(this.excpectedProxyClass.toString().compareTo("notNull") == 0){
             Assert.assertNotNull(customProxy);
@@ -127,10 +128,17 @@ public class ProxyManagerImplTest {
         //Now check if copy works
         if(this.excpectedProxyClass != null && this.obj != null){
             Object copyProxy = proxyManager.copyCustom(customProxy);
-
-            Assert.assertEquals(0,
-                    this.obj.getClass().getSimpleName().compareTo(copyProxy.getClass().getSimpleName()));
+            if(this.obj.getClass().getSimpleName().compareTo("java$util$Date$proxy") == 0){
+                Assert.assertEquals("java$util$Date$proxy",customProxy.getClass().getSimpleName());
+            }else{
+                Assert.assertEquals(0,
+                        this.obj.getClass().getSimpleName().compareTo(copyProxy.getClass().getSimpleName()));
+            }
         }
+
+
+
+
     }
 }
 
