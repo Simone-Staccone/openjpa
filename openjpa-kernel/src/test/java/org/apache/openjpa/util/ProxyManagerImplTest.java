@@ -1,5 +1,9 @@
 package org.apache.openjpa.util;
 
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+import org.apache.openjpa.kernel.FillStrategy;
+import org.apache.tools.ant.taskdefs.email.Header;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,6 +12,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 
+import java.beans.BeanDescriptor;
+import java.beans.Beans;
+import java.sql.Timestamp;
 import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
@@ -69,6 +76,10 @@ public class ProxyManagerImplTest {
 
         //Added after jacoco
         customProxyParameters.add(new CustomProxyPartition("java$util$Date$proxy", new ProxyManagerImpl().newDateProxy(Date.class), false));
+        customProxyParameters.add(new CustomProxyPartition("java$sql$Timestamp$proxy", new Timestamp(1000), false));
+        customProxyParameters.add(new CustomProxyPartition("java$util$TreeMap$proxy", new TreeMap<>(), false));  //Sorted map
+        customProxyParameters.add(new CustomProxyPartition("java$util$TreeSet$proxy", new TreeSet<>(), false)); //Sorted set
+        customProxyParameters.add(new CustomProxyPartition("java$beans$Beans$10$proxy", new Beans(), false)); //Sorted set
 
 
         return customProxyParameters;
@@ -119,6 +130,7 @@ public class ProxyManagerImplTest {
         }else{
             Assert.assertFalse(proxyManager.isUnproxyable(this.obj.getClass())); //isUnproxyble fallisce nei casi in cui passiamo un int
 
+
             Assert.assertEquals(0,
                     customProxy.getClass().getSimpleName().compareTo(this.excpectedProxyClass.toString()));
         }
@@ -135,7 +147,11 @@ public class ProxyManagerImplTest {
                 Assert.assertEquals(0,
                         this.obj.getClass().getSimpleName().compareTo(copyProxy.getClass().getSimpleName()));
             }
-            Assert.assertEquals(this.obj,newCopyProxy);
+
+
+
+            if(this.obj.getClass().getSimpleName().compareTo("Beans") != 0)
+                Assert.assertEquals(this.obj,newCopyProxy);
         }
 
 

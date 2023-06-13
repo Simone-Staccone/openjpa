@@ -37,6 +37,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Control-Flow-Coverage-Report
-          path: openjpa-kernel/target/site/jacoco-aggregate/
+          path: openjpa-kernel/target/site/jacoco
           if-no-files-found: error
 
