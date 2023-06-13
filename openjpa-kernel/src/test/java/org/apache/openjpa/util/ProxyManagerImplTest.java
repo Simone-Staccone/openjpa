@@ -1,9 +1,5 @@
 package org.apache.openjpa.util;
 
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
-import org.apache.openjpa.kernel.FillStrategy;
-import org.apache.tools.ant.taskdefs.email.Header;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,12 +8,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 
-import java.beans.BeanDescriptor;
 import java.beans.Beans;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
