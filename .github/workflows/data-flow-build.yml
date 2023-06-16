@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ windows-latest ,ubuntu-latest ]
+        os: [ windows-latest ,ubuntu-latest, macos-latest ]
 
     steps:
       - uses: actions/checkout@v2
@@ -49,6 +49,6 @@ jobs:
       - name: Upload report
         uses: actions/upload-artifact@v3
         with:
-          name: BaDuaCoverage_Report
+          name: ba-dua-report
           path: openjpa-kernel/target/badua.xml
           if-no-files-found: error

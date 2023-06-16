@@ -18,14 +18,17 @@ import org.mockito.Mockito;
 import org.mockito.internal.matchers.Null;
 
 
+import java.beans.Beans;
 import java.util.*;
 
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(value = Parameterized.class)
 public class AttachManagerTest {
     private AttachManager attachManager;
+    private AttachManager attachManager2; //Added after ba-dua
     private Object objCollection;
     private boolean expectedException;
 
@@ -60,6 +63,40 @@ public class AttachManagerTest {
                 return 0;
             }
         });
+
+
+
+        //added after ba-dua
+        BrokerImpl broker2 = Mockito.mock(BrokerImpl.class);
+        OpenJPAConfiguration openJPAConfiguration2 = Mockito.mock(OpenJPAConfiguration.class);
+        MetaDataRepository metaDataRepository2 = Mockito.mock(MetaDataRepository.class);
+        MetaDataFactory metaDataFactory2 =  Mockito.mock(MetaDataFactory.class);
+        MetaDataDefaults metaDataDefaults2 = Mockito.mock(MetaDataDefaults.class);
+
+        ProxyManagerImpl proxyManager2 = new ProxyManagerImpl();
+
+        when(metaDataRepository2.getMetaDataFactory()).thenReturn(metaDataFactory2);
+
+        when(metaDataFactory2.getDefaults()).thenReturn(metaDataDefaults2);
+
+        when(metaDataDefaults2.getCallbackMode()).thenReturn(2); //Mock not correct behaviour
+
+        when(openJPAConfiguration2.getProxyManagerInstance()).thenReturn(proxyManager2);
+        when(openJPAConfiguration2.getMetaDataRepositoryInstance()).thenReturn(metaDataRepository2);
+
+
+
+        when( broker2.getConfiguration() ).thenReturn(openJPAConfiguration2);
+
+
+        attachManager2 = new AttachManager(broker2, true, new OpCallbacks() {
+            @Override
+            public int processArgument(int op, Object arg, OpenJPAStateManager sm) {
+                return 0;
+            }
+        });
+
+
 
     }
 
@@ -110,6 +147,9 @@ public class AttachManagerTest {
 
             attachManager.fireBeforeAttach(this.objCollection, Mockito.mock(ClassMetaData.class));
 
+            attachManager.attach(new FetchConfigurationImpl());
+
+
             attachManager.attach(this.objCollection);
 
             if(this.objCollection != null){
@@ -127,6 +167,39 @@ public class AttachManagerTest {
             Assert.assertThrows(UserException.class, () -> attachManager.assertManaged(this.objCollection));
 
 
+
+            Assert.assertFalse(expectedException);
+        } catch (NullPointerException | NoSuchElementException e) {
+            Assert.assertTrue(expectedException);
+        }
+    }
+
+
+
+
+    //Added after ba-dua
+    @Test
+    public void attachBadBehaviourTest() {
+        try {
+            Assert.assertTrue(attachManager2.getCopyNew());
+
+            attachManager2.fireBeforeAttach(this.attachManager2, Mockito.mock(ClassMetaData.class));
+
+            attachManager2.attach(this.attachManager2);
+
+            if(this.objCollection != null){
+                Assert.assertThrows(NullPointerException.class,() -> attachManager2.getDetachedObjectId(this.objCollection));
+            }else{
+                throw new NullPointerException();
+            }
+
+            attachManager2.setAttachedCopy(this.objCollection, Mockito.mock(PersistenceCapable.class));
+
+
+            Assert.assertNotNull(attachManager2.getAttachedCopy(this.objCollection));
+
+            //No one should have managed object that has just been attached
+            Assert.assertThrows(UserException.class, () -> attachManager2.assertManaged(this.objCollection));
 
             Assert.assertFalse(expectedException);
         } catch (NullPointerException | NoSuchElementException e) {

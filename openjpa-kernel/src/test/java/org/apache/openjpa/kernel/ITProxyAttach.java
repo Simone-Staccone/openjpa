@@ -1,14 +1,9 @@
 package org.apache.openjpa.kernel;
 
 import org.apache.openjpa.conf.OpenJPAConfiguration;
-import org.apache.openjpa.kernel.AttachManager;
-import org.apache.openjpa.kernel.BrokerImpl;
-import org.apache.openjpa.kernel.OpCallbacks;
-import org.apache.openjpa.kernel.OpenJPAStateManager;
 import org.apache.openjpa.meta.MetaDataDefaults;
 import org.apache.openjpa.meta.MetaDataFactory;
 import org.apache.openjpa.meta.MetaDataRepository;
-import org.apache.openjpa.util.ProxyCollection;
 import org.apache.openjpa.util.ProxyManager;
 import org.apache.openjpa.util.ProxyManagerImpl;
 import org.junit.After;
