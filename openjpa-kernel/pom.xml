@@ -184,11 +184,14 @@
 <!--                        </dependencies>-->
                         <configuration>
                             <targetClasses>
-                                <param>org.apache.openjpa.util.ProxyManagerImpl</param>
+                                <param>org.apache.openjpa.util.ProxyManagerImpl</param>ù
+                                <param>org.apache.openjpa.kernel.AttachManager</param>
                             </targetClasses>
                             <targetTests>
                                 <param>org.apache.openjpa.util.ProxyManagerImplTest</param>
                                 <param>org.apache.openjpa.util.CalendarManagerTest</param>
+                                <param>org.apache.openjpa.kernel.AttachAllManagerTest</param>
+                                <param>org.apache.openjpa.kernel.AttachManagerTest</param>
                             </targetTests>
                             <avoidCallsTo>
                                 <avoidCallsTo>org.slf4j</avoidCallsTo>
