@@ -88,9 +88,17 @@ public class CalendarManagerTest {
 
 
 
+
             //Check on copy calendar to trigger addProxyCalendarMethods
             Calendar proxyCalendar1 = proxyManager.copyCalendar((Calendar) proxyCalendar);
 
+
+            //Added after PIT
+            if(timeZone != null){
+                Assert.assertEquals(timeZone,proxyCalendar1.getTimeZone());
+            }else{
+                Assert.assertEquals(TimeZone.getDefault(),proxyCalendar1.getTimeZone());
+            }
 
 
 

@@ -185,7 +185,7 @@ public class AttachManagerTest {
 
             attachManager2.fireBeforeAttach(this.attachManager2, Mockito.mock(ClassMetaData.class));
 
-            Assert.assertEquals(this.objCollection,attachManager2.attach(this.objCollection));
+            Assert.assertEquals(this.objCollection,attachManager2   .attach(this.objCollection));
 
             if(this.objCollection != null){
                 Assert.assertThrows(NullPointerException.class,() -> attachManager2.getDetachedObjectId(this.objCollection));
