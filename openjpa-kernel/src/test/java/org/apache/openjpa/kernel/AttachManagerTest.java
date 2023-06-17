@@ -2,10 +2,12 @@ package org.apache.openjpa.kernel;
 
 import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.enhance.PersistenceCapable;
+import org.apache.openjpa.lib.util.Localizer;
 import org.apache.openjpa.meta.ClassMetaData;
 import org.apache.openjpa.meta.MetaDataDefaults;
 import org.apache.openjpa.meta.MetaDataFactory;
 import org.apache.openjpa.meta.MetaDataRepository;
+import org.apache.openjpa.util.CallbackException;
 import org.apache.openjpa.util.ProxyManagerImpl;
 import org.apache.openjpa.util.UserException;
 import org.junit.After;
@@ -147,10 +149,8 @@ public class AttachManagerTest {
 
             attachManager.fireBeforeAttach(this.objCollection, Mockito.mock(ClassMetaData.class));
 
-            attachManager.attach(new FetchConfigurationImpl());
 
-
-            attachManager.attach(this.objCollection);
+            Assert.assertEquals(this.objCollection,attachManager.attach(this.objCollection));
 
             if(this.objCollection != null){
                 Assert.assertThrows(NullPointerException.class,() -> attachManager.getDetachedObjectId(this.objCollection));
@@ -185,7 +185,7 @@ public class AttachManagerTest {
 
             attachManager2.fireBeforeAttach(this.attachManager2, Mockito.mock(ClassMetaData.class));
 
-            attachManager2.attach(this.attachManager2);
+            Assert.assertEquals(this.objCollection,attachManager2.attach(this.objCollection));
 
             if(this.objCollection != null){
                 Assert.assertThrows(NullPointerException.class,() -> attachManager2.getDetachedObjectId(this.objCollection));
